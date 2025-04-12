@@ -19,7 +19,7 @@ RUN npm run build -- --configuration=production
 FROM nginx:1.25-alpine
 
 # Copy built Angular app from the builder stage
-COPY --from=builder /app/dist/fencing /usr/share/nginx/html
+COPY --from=builder /app/dist/fencing/browser /usr/share/nginx/html
 
 # Copy custom Nginx configuration (optional)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
