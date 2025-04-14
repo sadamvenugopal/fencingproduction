@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copy service account key file
-COPY ./path/to/credentials.json /app/credentials.json
+COPY credentials.json /app/credentials.json
 ENV GOOGLE_APPLICATION_CREDENTIALS=/app/credentials.json
 
 # Set file permissions
