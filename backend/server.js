@@ -6,14 +6,23 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+// CORS
 app.use(cors());
 app.use(bodyParser.json());
 
 // ✅ Load Routes
 const bookNowRoutes = require("./booknow");
-app.use("/api/booknow", bookNowRoutes); // Mount the new booking route
+app.use("/api/booknow", bookNowRoutes);
 
-// Start Server
+// ✅ Determine URL Based on ENV
+const getBaseUrl = () => {
+    if (process.env.NODE_ENV === "production") {
+        return `https://${process.env.HOST || "your-domain.com"}`;
+    }
+    return `http://localhost:${PORT}`;
+};
+
+// ✅ Start Server
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on ${process.env.BASE_URL || "http://localhost:" + PORT}`);
+    console.log(`🚀 Server running at ${getBaseUrl()}`);
 });
