@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    backendUrl: 'http://localhostvenugopal:3002'
+    backendUrl: 'http://localhost:3002'
   };
   
