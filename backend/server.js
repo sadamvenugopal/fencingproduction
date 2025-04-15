@@ -17,6 +17,7 @@ app.use("/api/booknow", bookNowRoutes);
 // ✅ Determine URL Based on ENV
 const getBaseUrl = () => {
     if (process.env.NODE_ENV === "production") {
+        console.log(process.env.HOST);   
         return `https://${process.env.HOST }`;
     }
     return `http://localhost:${PORT}`;
