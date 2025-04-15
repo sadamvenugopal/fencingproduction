@@ -8,6 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Copy the rest of your code
+ COPY . .
 
 # Expose the backend port
 EXPOSE 3002
