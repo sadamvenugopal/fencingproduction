@@ -1,26 +1,31 @@
 const express = require("express");
 const { google } = require("googleapis");
-const fs = require("fs");
-const sgMail = require("@sendgrid/mail"); // Import SendGrid mail package
-require("dotenv").config(); // Load environment variables
+const sgMail = require("@sendgrid/mail");
+require("dotenv").config();
 const router = express.Router();
 
-// Load API credentials
+// Load credentials from environment variables (Google JWT in Cloud)
 const SHEET_ID = process.env.SHEET_ID;
-const CREDENTIALS = JSON.parse(fs.readFileSync("credentials.json"));
+const GOOGLE_CREDENTIALS_BASE64 = process.env.GOOGLE_CREDENTIALS_BASE64;
 
 // Load SendGrid credentials
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const SENDER_EMAIL = process.env.SENDER_EMAIL;
 
+// Decode the base64 Google credentials
+const decodedCredentials = JSON.parse(Buffer.from(GOOGLE_CREDENTIALS_BASE64, "base64").toString("utf-8"));
+
 // Set SendGrid API key
 sgMail.setApiKey(SENDGRID_API_KEY);
 
 async function accessSpreadsheet() {
     const auth = new google.auth.GoogleAuth({
-        credentials: CREDENTIALS,
-        scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+        credentials: {
+            client_email: decodedCredentials.client_email,
+            private_key: decodedCredentials.private_key.replace(/\\n/g, '\n')
+        },
+        scopes: ["https://www.googleapis.com/auth/spreadsheets"]
     });
     return google.sheets({ version: "v4", auth });
 }
@@ -51,12 +56,12 @@ router.post("/submit-booking", async (req, res) => {
             bookingData.email,
             bookingData.phone,
             bookingData.requirements,
-            bookingData.date    
+            bookingData.date
         ]];
 
         await sheets.spreadsheets.values.append({
             spreadsheetId: SHEET_ID,
-            range: "Bookings!A:D", // Adjust based on the number of fields
+            range: "Bookings!A:E", // Adjusted based on the number of fields
             valueInputOption: "RAW",
             insertDataOption: "INSERT_ROWS",
             requestBody: { values },
@@ -78,20 +83,19 @@ router.post("/submit-booking", async (req, res) => {
         };
 
         const userEmailMessage = {
-            to: bookingData.email, // Send to user who submitted the form
+            to: bookingData.email,
             from: SENDER_EMAIL,
             subject: "Booking Confirmation",
             text: `
                 Thank you for your booking, ${bookingData.name}!
                 We have received your request and will get back to you soon.
-                
+
                 Booking Details:
                 - Name: ${bookingData.name}
                 - Email: ${bookingData.email}
                 - Phone: ${bookingData.phone}
                 - Requirements: ${bookingData.requirements}
                 - Date: ${bookingData.date}
-
             `,
         };
 
