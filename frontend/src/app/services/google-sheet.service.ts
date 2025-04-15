@@ -12,6 +12,7 @@ export class GoogleSheetService {
   constructor(private http: HttpClient) {}
 
   submitForm(formData: any): Observable<any> {
-    return this.http.post(`${this.backendUrl}/submit-booking`, formData);
+    return this.http.post(`${this.backendUrl}submit-booking`, formData);
   }
+  
 }
