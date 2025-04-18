@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const booknowRoutes = require("./backend/booknow");
+const booknowRoutes = require("./booknow");
 //const booknowRoutes = require("./booknow.js");
 app.use(express.json());
 
