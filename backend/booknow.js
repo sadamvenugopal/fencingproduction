@@ -9,8 +9,8 @@ const router = express.Router();
 //const allowedOrigins = ['http://frontend:4200']; // Replace 'frontend' if your container name is different
 const corsOptions = {
  // origin: 'http://frontend:80', // Only allow Angular container
- origin:  'http://ssscg4kwgckck0cswgkokwcs.82.25.109.195.sslip.io'
-  optionsSuccessStatus: 200,
+ origin:  'http://ssscg4kwgckck0cswgkokwcs.82.25.109.195.sslip.io',
+  optionsSuccessStatus: 200;
 };
 
 router.use(cors(corsOptions));
