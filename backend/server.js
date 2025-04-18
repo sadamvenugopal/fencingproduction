@@ -1,7 +1,7 @@
-const express = require("express");
+/*const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
-require("dotenv").config();
+//const bodyParser = require("body-parser");
+//require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -43,5 +43,39 @@ const getBaseUrl = () => {
 
 // ✅ Start Server
 app.listen(PORT, '0.0.0.0', () => { // Listen on all IPs
-    console.log(`🚀 Server running at ${getBaseUrl()}`);
+    console.log(`🚀 Server running at ${getBaseUrl()}`); 
+});*/
+// New Changes 
+
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+// Only allow requests from Angular container (container name: frontend)
+const allowedOrigins = ['http://frontend:4200']; // 'frontend' = container name
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy: Not allowed'));
+    }
+  }
+}));
+
+app.get('/api/hello', (req, res) => {
+  res.json({ message: 'Hello from backend!' });
 });
+
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
+
+
+
+
+
+
+
+
