@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const booknowRoutes = require("./routes/booknow");
-
+//const booknowRoutes = require("./routes/booknow");
+const booknowRoutes = require("./booknow");
 app.use(express.json());
 
 // Mount booknow route
