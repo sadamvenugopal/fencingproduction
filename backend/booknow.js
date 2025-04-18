@@ -6,7 +6,14 @@ require("dotenv").config();
 const router = express.Router();
 
 // ✅ Allow only the Angular container to access this API
-const allowedOrigins = ['http://frontend:4200']; // Replace 'frontend' if your container name is different
+//const allowedOrigins = ['http://frontend:4200']; // Replace 'frontend' if your container name is different
+const corsOptions = {
+  origin: 'http://frontend:4200', // Only allow Angular container
+  optionsSuccessStatus: 200,
+};
+
+router.use(cors(corsOptions));
+
 
 router.use(cors({
     origin: function (origin, callback) {
